@@ -1,16 +1,15 @@
-const options = {
-  method: "GET",
-  headers: {
-    accept: "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYjRiZDE4MjE1N2I1Njk3NzdiNDY2MmI4Y2YwYjRjZiIsInN1YiI6IjY1OWI4MjM0Y2E0ZjY3MDBmMDQzZmNkZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.evSRwAo9ZsM7AIVmH0vskk5w3H6aFJBBPclFZwRsBHE",
-  },
-};
-
 // API로부터 id, title, overview, popularity, poster_path 가져오기
 const MOVIE_API = config.apikey;
 
 async function getData() {
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYjRiZDE4MjE1N2I1Njk3NzdiNDY2MmI4Y2YwYjRjZiIsInN1YiI6IjY1OWI4MjM0Y2E0ZjY3MDBmMDQzZmNkZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.evSRwAo9ZsM7AIVmH0vskk5w3H6aFJBBPclFZwRsBHE",
+    },
+  };
   try {
     const response = await fetch(
       "https://api.themoviedb.org/3/movie/top_rated?api_key=" + MOVIE_API
@@ -22,38 +21,51 @@ async function getData() {
   }
 }
 
+// Card Create
 const createMovieCards = async () => {
   const data = await getData();
-  const card_container = document.getElementsByClassName(".card_container");
 
-  const base_url = "https://image.tmdb.org/t/p/";
-  const file_size = "w500/";
-  data.map((movie) => {
-    const card = document.createElement("div");
-    card.className = "card";
+  const card_container = document.querySelector("#card_container");
 
-    //image
-    const img = document.createElement("a");
-    img.className = "img";
-    img.setAttribute("href", base_url + file_size + movie.poster_path);
+  card_container.innerHTML = data
+    .map(
+      (movie) =>
+        `<div class ="card" id=${movie.id}>
+      <img class="img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+      <h3 class="title">${movie.title}</h3>
+      <p>${movie.overview}</p>
+      <p>Rating : ${movie.vote_average}</p>
+    </div>`
+    )
+    .join("");
 
-    //title
-    const title = document.createElement("p");
-    title.className = "title";
-    title.innerText = movie.title;
+  card_container.addEventListener("click", clickCard);
+  function clickCard({ target }) {
+    if (target === card_container) return;
+    if (target.matches(".card")) alert(`영화 id : ${target.id}`);
+    else alert(`영화 id : ${target.parentNode.id}`);
+  }
+};
 
-    //overview
-    const overview = document.createElement("p");
-    overview.className = "overview";
-    overview.innerText = movie.overview;
+// Search
+const handleSearch = (searchWord) => {
+  const card_container = document.querySelector("#card_container");
 
-    //vote_average
-    const vote_average = document.createElement("p");
-    vote_average.className = "vote_average";
-    vote_average.innerText = movie.vote_average;
+  card_container.forEach((card) => {
+    const title = card.querySelector(".title").innerText.toLowerCase();
+    const search = searchWord.toLowerCase();
+
+    if (title.includes(search)) card.style.display = "inline-block";
+    else card.style.display = "none";
   });
 };
 
-const clickCard = () => {};
+//main
 
-document.getElementsByClassName('.card')
+createMovieCards();
+
+const searchInput = document.querySelector("#search-input");
+searchInput;
+
+form.addEventListener("submit", handleSearch(searchInput.value));
+searchInput.addEventListener("onkeyup", handleSearch(searchInput.value));
