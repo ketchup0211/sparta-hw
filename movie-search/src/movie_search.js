@@ -49,13 +49,13 @@ const createMovieCards = async () => {
 
 // Search
 const handleSearch = (searchWord) => {
-  const card_container = document.querySelector("#card_container");
+  const cards = document.querySelectorAll(".card");
 
-  card_container.forEach((card) => {
+  cards.forEach((card) => {
     const title = card.querySelector(".title").innerText.toLowerCase();
     const search = searchWord.toLowerCase();
 
-    if (title.includes(search)) card.style.display = "inline-block";
+    if (title.includes(search)) card.style.display = "block";
     else card.style.display = "none";
   });
 };
@@ -65,7 +65,12 @@ const handleSearch = (searchWord) => {
 createMovieCards();
 
 const searchInput = document.querySelector("#search-input");
-searchInput;
-
-form.addEventListener("submit", handleSearch(searchInput.value));
-searchInput.addEventListener("onkeyup", handleSearch(searchInput.value));
+const form = document.querySelector("#search");
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  handleSearch(searchInput.value);
+});
+searchInput.addEventListener("keyup", (event) => {
+  event.preventDefault();
+  handleSearch(searchInput.value);
+});
