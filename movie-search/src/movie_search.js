@@ -16,29 +16,44 @@ async function getData() {
       "https://api.themoviedb.org/3/movie/top_rated?api_key=" + MOVIE_API
     );
     const jsonData = await response.json();
-    return jsonData["results"];
+    return jsonData.results;
   } catch (err) {
     console.log(err);
   }
 }
 
-const data = getData();
+const createMovieCards = async () => {
+  const data = await getData();
+  const card_container = document.getElementsByClassName(".card_container");
 
-// GET data
-const base_url = "https://image.tmdb.org/t/p/";
-const file_size = "w500/";
-for (let i = 0; i < data.length; i++) {
-  //image
-  let poster_path = data[i]["poster_path"];
-  let img = base_url + file_size + poster_path;
+  const base_url = "https://image.tmdb.org/t/p/";
+  const file_size = "w500/";
+  data.map((movie) => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-  //title
-  let movie_title = data[i][title];
+    //image
+    const img = document.createElement("a");
+    img.className = "img";
+    img.setAttribute("href", base_url + file_size + movie.poster_path);
 
-  //overview
-  let overview = data[i]["overview"];
+    //title
+    const title = document.createElement("p");
+    title.className = "title";
+    title.innerText = movie.title;
 
-  //vote_average
-  let vote_average = data[i]["vote_average"];
-}
-//any
+    //overview
+    const overview = document.createElement("p");
+    overview.className = "overview";
+    overview.innerText = movie.overview;
+
+    //vote_average
+    const vote_average = document.createElement("p");
+    vote_average.className = "vote_average";
+    vote_average.innerText = movie.vote_average;
+  });
+};
+
+const clickCard = () => {};
+
+document.getElementsByClassName('.card')
