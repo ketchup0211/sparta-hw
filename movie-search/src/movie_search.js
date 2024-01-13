@@ -52,7 +52,7 @@ const handleSearch = (searchWord) => {
   const cards = document.querySelectorAll(".card");
 
   cards.forEach((card) => {
-    const title = card.querySelector(".title").innerText.toLowerCase();
+    const title = card.querySelector(".title").textContent.toLowerCase();
     const search = searchWord.toLowerCase();
 
     if (title.includes(search)) card.style.display = "block";
@@ -66,6 +66,7 @@ createMovieCards();
 
 const searchInput = document.querySelector("#search-input");
 const form = document.querySelector("#search");
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   handleSearch(searchInput.value);
